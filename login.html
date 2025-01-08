@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - VEIN</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #login-form {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    #login-form h2 {
+      color: #0018f9;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+      text-align: left;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    button {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .forgot-password {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="login-form">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="name">Name/Contact Number:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Login</button>
+
+      <div class="forgot-password">
+        <a href="#">Forgot Password?</a>
+      </div>
+    </form>
+    <div class="error-message" id="error-message"></div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const password = document.getElementById('password').value;
+      const errorMessageElement = document.getElementById('error-message');
+
+      // Retrieve the user details from localStorage
+      const storedUserDetails = JSON.parse(localStorage.getItem('userDetails'));
+
+      // Check if the entered details match the stored details
+      if (storedUserDetails && storedUserDetails.name === name && storedUserDetails.password === password) {
+        window.location.href = '/welcome.html'; // Redirect to the welcome page
+      } else {
+        errorMessageElement.textContent = 'Invalid login details! Please check your name/number and password.';
+      }
+    });
+  </script>
+</body>
+
+</html>

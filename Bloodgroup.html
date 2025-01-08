@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood group</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .blood-button {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: navy;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-block;
+            line-height: 100px;
+            text-decoration: none;
+        }
+        .blood-button:hover {
+            background-color: #cc0000;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <!-- Using CDN for Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const bloodBanks = {
+            'A+': [
+                { name: 'King George Hospital', address: 'King George Street, Visakhapatnam', lat: 17.7121, lng: 83.3093 },
+                { name: 'Apollo Hospitals', address: 'Dabagardens, Visakhapatnam', lat: 17.7277, lng: 83.3150 },
+                { name: 'CARE Hospitals', address: 'Gajuwaka, Visakhapatnam', lat: 17.7168, lng: 83.3164 }
+            ],
+            'A-': [
+                { name: 'Seven Hills Hospital', address: 'Airport Road, Visakhapatnam', lat: 17.7250, lng: 83.3218 },
+                { name: 'Gitam Institute of Medical Sciences', address: 'Rushikonda, Visakhapatnam', lat: 17.7813, lng: 83.3757 }
+            ],
+            'B+': [
+                { name: 'Queens NRI Hospital', address: 'Madhurawada, Visakhapatnam', lat: 17.7371, lng: 83.3263 },
+                { name: 'Ramakrishna Hospital', address: 'Maharanipeta, Visakhapatnam', lat: 17.7345, lng: 83.3227 },
+                { name: 'Omni RK Hospital', address: 'Dabagardens, Visakhapatnam', lat: 17.7491, lng: 83.3261 }
+            ],
+            'B-': [
+                { name: 'Manipal Hospitals', address: 'Chinnakakani, Visakhapatnam', lat: 17.7410, lng: 83.3117 },
+                { name: 'Medicover Hospitals', address: 'Seethammadhara, Visakhapatnam', lat: 17.7193, lng: 83.3021 }
+            ],
+            'O+': [
+                { name: 'Padmaja Hospital', address: 'Dwaraka Nagar, Visakhapatnam', lat: 17.7348, lng: 83.3187 },
+                { name: 'Susruta Multi Specialty Hospital', address: 'MVP Colony, Visakhapatnam', lat: 17.7104, lng: 83.3096 }
+            ],
+            'O-': [
+                { name: 'Indus Hospital', address: 'Sabbavaram, Visakhapatnam', lat: 17.7284, lng: 83.3181 },
+                { name: 'Ankura Hospital for Women & Children', address: 'Gajuwaka, Visakhapatnam', lat: 17.7271, lng: 83.3158 }
+            ],
+            'AB+': [
+                { name: 'Pinnacle Hospital', address: 'Madhurawada, Visakhapatnam', lat: 17.7496, lng: 83.3407 },
+                { name: 'Mahatma Gandhi Cancer Hospital', address: 'Dondaparthi, Visakhapatnam', lat: 17.7100, lng: 83.3162 }
+            ],
+            'AB-': [
+                { name: 'City Hospital', address: 'Suryabagh, Visakhapatnam', lat: 17.7340, lng: 83.3290 },
+                { name: 'Gayatri Vidya Parishad Hospital', address: 'Madhurawada, Visakhapatnam', lat: 17.7933, lng: 83.3388 }
+            ]
+        };
+
+        let map;
+        let markers = [];
+
+        // Initialize the map
+        function initMap() {
+            const location = [17.6868, 83.2185]; // Center to Visakhapatnam
+            map = L.map('map').setView(location, 13);
+
+            // Set up the OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        // Add markers based on selected blood group and zoom to fit them
+        function showBloodBanks(bloodGroup) {
+            // Clear existing markers
+            markers.forEach(marker => marker.remove());
+            markers = [];
+
+            // Get the blood banks for the selected blood group
+            const selectedBloodBanks = bloodBanks[bloodGroup];
+            const bounds = [];
+
+            selectedBloodBanks.forEach(bank => {
+                const marker = L.marker([bank.lat, bank.lng]).addTo(map)
+                    .bindPopup(`<b>${bank.name}</b><br>Address: ${bank.address}<br>Blood Group: ${bloodGroup}`, { offset: L.point(0, -25) })
+                    .openPopup(); // Automatically open the popup
+                markers.push(marker);
+
+                // Add marker coordinates to bounds
+                bounds.push([bank.lat, bank.lng]);
+            });
+
+            // Zoom map to show all markers
+            if (bounds.length > 0) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        // Event listeners for the blood group buttons
+        document.addEventListener('DOMContentLoaded', function () {
+            initMap();
+
+            // Add event listeners to each blood group button
+            const bloodButtons = document.querySelectorAll('.blood-button');
+            bloodButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const bloodGroup = button.innerText;
+                    showBloodBanks(bloodGroup);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <a href="javascript:void(0);" class="blood-button">A+</a>
+        <a href="javascript:void(0);" class="blood-button">A-</a>
+        <a href="javascript:void(0);" class="blood-button">B+</a>
+        <a href="javascript:void(0);" class="blood-button">B-</a>
+        <a href="javascript:void(0);" class="blood-button">O+</a>
+        <a href="javascript:void(0);" class="blood-button">O-</a>
+        <a href="javascript:void(0);" class="blood-button">AB+</a>
+        <a href="javascript:void(0);" class="blood-button">AB-</a>
+    </div>
+
+    <div id="map"></div>
+</body>
+</html>

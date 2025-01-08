@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fresh Fused Plasma Availability</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    #map {
+      height: 60vh;
+      width: 100px%;
+      margin-top: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #0018f9;
+    }
+
+    .instructions {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1 class="header">Fresh Fused Plasma Availability</h1>
+    <div class="instructions">
+      <p>Find hospitals and blood banks that provide Fresh Fused Plasma below:</p>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    // List of locations where Fresh Fused Plasma is available with number of units
+    const plasmaBanks = [
+      {
+        name: 'King George Hospital',
+        address: 'King George Street, Visakhapatnam',
+        lat: 17.7121,
+        lng: 83.3093,
+        plasmaUnits: 20 // Number of available Fresh Fused Plasma units
+      },
+      {
+        name: 'CARE Hospitals',
+        address: 'Gajuwaka, Visakhapatnam',
+        lat: 17.7168,
+        lng: 83.3164,
+        plasmaUnits: 15
+      },
+      {
+        name: 'Apollo Hospitals',
+        address: 'Dabagardens, Visakhapatnam',
+        lat: 17.7277,
+        lng: 83.3150,
+        plasmaUnits: 25
+      },
+      {
+        name: 'Indus Hospital',
+        address: 'Sabbavaram, Visakhapatnam',
+        lat: 17.7284,
+        lng: 83.3181,
+        plasmaUnits: 10
+      },
+      {
+        name: 'Medicover Hospitals',
+        address: 'Seethammadhara, Visakhapatnam',
+        lat: 17.7193,
+        lng: 83.3021,
+        plasmaUnits: 18
+      }
+    ];
+
+    // Initialize the map
+    const map = L.map('map').setView([17.7121, 83.3093], 13); // Center map to Visakhapatnam
+
+    // Set up the OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add markers for each plasma bank with number of available units
+    plasmaBanks.forEach(bank => {
+      const marker = L.marker([bank.lat, bank.lng]).addTo(map)
+        .bindPopup(`<b>${bank.name}</b><br>Address: ${bank.address}<br>Plasma Availability: Fresh Fused Plasma<br>Available Units: ${bank.plasmaUnits}`);
+    });
+
+    // Zoom the map to fit all the markers
+    const bounds = plasmaBanks.map(bank => [bank.lat, bank.lng]);
+    map.fitBounds(bounds);
+  </script>
+</body>
+
+</html>

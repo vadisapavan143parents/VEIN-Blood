@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEIN</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #main {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #343a40;
+      margin-bottom: 300px;
+      font-family: 'Poppins', sans-serif;
+      color: #0018f9;
+      margin-top: 300px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      color: #fff;
+      background-color: #007bff;
+      border-radius: 10px;
+      padding: 15px 30px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .icon:hover {
+      background-color: #0056b3;
+    }
+
+    .icon img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .icon-donor {
+      background-color: #28a745;
+    }
+
+    .icon-blood {
+      background-color: #dc3545;
+    }
+
+    .icon-login {
+      background-color: #ffc107;
+    }
+
+    .icon-signup {
+      background-color: #17a2b8;
+    }
+
+    .icon-donor:hover {
+      background-color: #218838;
+    }
+
+    .icon-blood:hover {
+      background-color: #c82333;
+    }
+
+    .icon-login:hover {
+      background-color: #e0a800;
+    }
+
+    .icon-signup:hover {
+      background-color: #138496;
+    }
+
+    #signup-dialog {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    #signup-dialog h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #343a40;
+    }
+
+    #signup-dialog form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #signup-dialog label {
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    #signup-dialog input,
+    #signup-dialog select {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #signup-dialog button {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #signup-dialog button:hover {
+      background-color: #218838;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Main Screen -->
+  <div id="main">
+    <h1>VEIN</h1>
+    <div class="options">
+      <div class="icon icon-donor" onclick="window.location.href='/donar.html';">
+        <img src="/Donor.png" alt="Donor">
+        Donate Blood
+      </div>
+      <div class="icon icon-blood" onclick="window.location.href='/blood.html';">
+        <img src="/blood.png" alt="Blood">
+        Get Blood
+      </div>
+    </div>
+    <div class="options">
+      <div class="icon icon-login" onclick="window.location.href='/login.html';">
+        Login
+      </div>
+      <div class="icon icon-signup" onclick="openSignupDialog();">
+        Signup
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay" onclick="closeSignupDialog()"></div>
+
+  <!-- Signup Dialog -->
+  <div id="signup-dialog">
+    <h2>Donor Details</h2>
+    <form id="signup-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="contact">Contact No:</label>
+      <input type="tel" id="contact" name="contact" pattern="[0-9]{10}" required>
+
+      <label for="blood-group">Blood Group:</label>
+      <select id="blood-group" name="blood-group" required>
+        <option value="">Select Blood Group</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+      </select>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    function openSignupDialog() {
+      document.getElementById('signup-dialog').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeSignupDialog() {
+      document.getElementById('signup-dialog').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Handle form submission
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Save user details in localStorage
+      const name = document.getElementById('name').value;
+      const contact = document.getElementById('contact').value;
+      const bloodGroup = document.getElementById('blood-group').value;
+      const location = document.getElementById('location').value;
+      const password = document.getElementById('password').value;
+
+      const userDetails = {
+        name,
+        contact,
+        bloodGroup,
+        location,
+        password
+      };
+
+      localStorage.setItem('userDetails', JSON.stringify(userDetails));
+
+      // Redirect to page3.html
+      window.location.href = '/page3.html';
+    });
+  </script>
+</body>
+
+</html>

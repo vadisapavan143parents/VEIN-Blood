@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Banks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .blood-bank-button {
+            width: 200px;
+            height: 50px;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: navy;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-block;
+            line-height: 50px;
+            text-decoration: none;
+        }
+        .blood-bank-button:hover {
+            background-color: #cc0000;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .blood-info {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const bloodBanks = [
+            { name: 'King George Hospital', lat: 17.7121, lng: 83.3093, blood: ['A+', 'O+', 'AB+'] },
+            { name: 'Apollo Hospitals', lat: 17.7277, lng: 83.3150, blood: ['A-', 'B+', 'O-'] },
+            { name: 'CARE Hospitals', lat: 17.7168, lng: 83.3164, blood: ['B-', 'O+', 'AB-'] },
+            { name: 'Seven Hills Hospital', lat: 17.7250, lng: 83.3218, blood: ['A+', 'AB+'] }
+        ];
+
+        let map;
+
+        // Initialize the map
+        function initMap() {
+            const location = [17.6868, 83.2185]; // Center to Visakhapatnam
+            map = L.map('map').setView(location, 13);
+
+            // Set up the OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        // Display blood banks as buttons
+        function displayBloodBanks() {
+            const container = document.querySelector('.container');
+            bloodBanks.forEach((bank, index) => {
+                const button = document.createElement('button');
+                button.className = 'blood-bank-button';
+                button.textContent = bank.name;
+                button.addEventListener('click', () => showBloodDetails(index));
+                container.appendChild(button);
+            });
+        }
+
+        // Show blood details for the selected blood bank
+        function showBloodDetails(index) {
+            const bloodBank = bloodBanks[index];
+
+            // Clear previous blood info and update map
+            const bloodInfoDiv = document.querySelector('.blood-info');
+            bloodInfoDiv.innerHTML = `<h2>${bloodBank.name}</h2><p>Available Blood Types:</p><ul>${bloodBank.blood.map(type => `<li>${type}</li>`).join('')}</ul>`;
+            bloodInfoDiv.style.display = 'block';
+
+            // Focus map on the selected blood bank
+            map.setView([bloodBank.lat, bloodBank.lng], 15);
+            L.marker([bloodBank.lat, bloodBank.lng]).addTo(map)
+                .bindPopup(`<b>${bloodBank.name}</b><br>Available Blood: ${bloodBank.blood.join(', ')}`)
+                .openPopup();
+        }
+
+        // Initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function () {
+            initMap();
+            displayBloodBanks();
+        });
+    </script>
+</head>
+<body>
+    <div class="container"></div>
+    <div id="map"></div>
+    <div class="blood-info"></div>
+</body>
+</html>
